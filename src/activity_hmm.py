@@ -1,6 +1,6 @@
 """Windowed feature extraction and diagonal-Gaussian HMM for Sensor Logger activity data."""
 from __future__ import annotations
-import csv, math, re
+import csv, json, re
 from pathlib import Path
 import numpy as np
 
@@ -74,8 +74,15 @@ def load_dataset(data_root):
 
 
 def logsumexp(a, axis=None):
+    """Numerically stable log(sum(exp(a))) with defined all-infinite behavior."""
+    a = np.asarray(a, dtype=float)
     mx = np.max(a, axis=axis, keepdims=True)
-    out = mx + np.log(np.exp(a - mx).sum(axis=axis, keepdims=True))
+    with np.errstate(invalid="ignore", divide="ignore", over="ignore"):
+        shifted = np.where(np.isfinite(mx), a - mx, -np.inf)
+        total = np.exp(shifted).sum(axis=axis, keepdims=True)
+        out = mx + np.log(total)
+    out = np.where(np.isneginf(mx), -np.inf, out)
+    out = np.where(np.isposinf(mx), np.inf, out)
     if axis is not None:
         out = np.squeeze(out, axis=axis)
     else:
@@ -84,71 +91,184 @@ def logsumexp(a, axis=None):
 
 
 class DiagonalGaussianHMM:
-    """Four-state diagonal Gaussian HMM with log-space Baum-Welch and Viterbi."""
-    def __init__(self, n_states=4, max_iter=100, tol=1e-4, variance_floor=1e-3, transition_prior=0.05):
-        self.n_states=n_states; self.max_iter=max_iter; self.tol=tol
-        self.variance_floor=variance_floor; self.transition_prior=transition_prior
+    """Diagonal-Gaussian HMM trained with Baum-Welch and decoded by Viterbi.
+
+    The activity labels are used to initialize one Gaussian emission per state.
+    Baum-Welch then refines the initial-state, transition, and emission parameters
+    across the training sequences. Each sequence remains an independent recording.
+    """
+
+    def __init__(
+        self,
+        n_states=4,
+        max_iter=100,
+        tol=1e-4,
+        variance_floor=1e-3,
+        transition_prior=0.05,
+    ):
+        if n_states < 1 or max_iter < 1 or tol <= 0 or variance_floor <= 0 or transition_prior <= 0:
+            raise ValueError("HMM dimensions, iteration limit, tolerance, variance floor, and prior must be positive")
+        self.n_states = n_states
+        self.max_iter = max_iter
+        self.tol = tol
+        self.variance_floor = variance_floor
+        self.transition_prior = transition_prior
 
     def _log_emissions(self, X):
-        d=X[:,None,:]-self.means[None,:,:]
-        return -.5*(self.n_features*np.log(2*np.pi)+np.log(self.vars).sum(axis=1)[None,:]+(d*d/self.vars[None,:,:]).sum(axis=2))
+        """Return log p(x_t | state) for independent per-feature Gaussians."""
+        difference = X[:, None, :] - self.means[None, :, :]
+        log_normalizer = self.n_features * np.log(2 * np.pi) + np.log(self.vars).sum(axis=1)
+        quadratic = (difference * difference / self.vars[None, :, :]).sum(axis=2)
+        return -0.5 * (log_normalizer[None, :] + quadratic)
 
     def _forward_backward(self, X):
-        le=self._log_emissions(X); la=np.log(self.A); lp=np.log(self.pi)
-        T=len(X); alpha=np.empty((T,self.n_states)); alpha[0]=lp+le[0]
-        for t in range(1,T): alpha[t]=le[t]+logsumexp(alpha[t-1][:,None]+la,axis=0)
-        ll=float(logsumexp(alpha[-1]))
-        beta=np.zeros((T,self.n_states))
-        for t in range(T-2,-1,-1): beta[t]=logsumexp(la+le[t+1][None,:]+beta[t+1][None,:],axis=1)
-        log_gamma=alpha+beta-ll
-        gamma=np.exp(log_gamma)
-        xi_sum=np.zeros((self.n_states,self.n_states))
-        for t in range(T-1):
-            z=alpha[t][:,None]+la+le[t+1][None,:]+beta[t+1][None,:]-ll
-            xi_sum += np.exp(z)
-        return ll,gamma,xi_sum
+        """Compute sequence log-likelihood, state posteriors, and transition counts."""
+        log_emission = self._log_emissions(X)
+        log_transition = np.log(self.A)
+        log_initial = np.log(self.pi)
+        time_steps = len(X)
+
+        # Forward recursion: alpha[t, j] sums paths ending in state j.
+        alpha = np.empty((time_steps, self.n_states))
+        alpha[0] = log_initial + log_emission[0]
+        for t in range(1, time_steps):
+            alpha[t] = log_emission[t] + logsumexp(
+                alpha[t - 1][:, None] + log_transition, axis=0
+            )
+        log_likelihood = float(logsumexp(alpha[-1]))
+
+        # Backward recursion: beta[t, i] sums all future observations after state i.
+        beta = np.zeros((time_steps, self.n_states))
+        for t in range(time_steps - 2, -1, -1):
+            beta[t] = logsumexp(
+                log_transition
+                + log_emission[t + 1][None, :]
+                + beta[t + 1][None, :],
+                axis=1,
+            )
+
+        # gamma gives state occupancy; xi gives expected adjacent-state counts.
+        gamma = np.exp(alpha + beta - log_likelihood)
+        gamma /= np.maximum(gamma.sum(axis=1, keepdims=True), 1e-300)
+        xi_sum = np.zeros((self.n_states, self.n_states))
+        for t in range(time_steps - 1):
+            log_xi = (
+                alpha[t][:, None]
+                + log_transition
+                + log_emission[t + 1][None, :]
+                + beta[t + 1][None, :]
+                - log_likelihood
+            )
+            xi_sum += np.exp(log_xi)
+        return log_likelihood, gamma, xi_sum
 
     def fit(self, sequences, labels):
-        allx=np.concatenate(sequences); self.n_features=allx.shape[1]
-        labels=np.asarray(labels)
-        self.means=np.vstack([np.concatenate([x for x,y in zip(sequences,labels) if y==s]).mean(axis=0) for s in range(self.n_states)])
-        self.vars=np.vstack([np.concatenate([x for x,y in zip(sequences,labels) if y==s]).var(axis=0) for s in range(self.n_states)])
-        self.vars=np.maximum(self.vars, self.variance_floor)
-        self.pi=np.ones(self.n_states)/self.n_states
-        self.A=np.full((self.n_states,self.n_states), self.transition_prior)
+        """Initialize from labeled sequences, then refine parameters with EM."""
+        if not sequences or len(sequences) != len(labels):
+            raise ValueError("Provide at least one sequence and exactly one label per sequence")
+        sequences = [np.asarray(sequence, dtype=float) for sequence in sequences]
+        labels = np.asarray(labels, dtype=int)
+        if np.any((labels < 0) | (labels >= self.n_states)):
+            raise ValueError("Sequence labels must be state indices from 0 to n_states - 1")
+        if set(labels.tolist()) != set(range(self.n_states)):
+            raise ValueError("Training data must contain at least one sequence for every state")
+        if any(x.ndim != 2 or len(x) == 0 for x in sequences):
+            raise ValueError("Each observation sequence must be a nonempty 2D array")
+        n_features = sequences[0].shape[1]
+        if any(x.shape[1] != n_features or not np.all(np.isfinite(x)) for x in sequences):
+            raise ValueError("Sequences must have matching feature counts and finite values")
+
+        self.n_features = n_features
+        # Supervised initialization anchors state identities to the activity labels.
+        self.means = np.vstack([
+            np.concatenate([x for x, label in zip(sequences, labels) if label == state]).mean(axis=0)
+            for state in range(self.n_states)
+        ])
+        self.vars = np.vstack([
+            np.concatenate([x for x, label in zip(sequences, labels) if label == state]).var(axis=0)
+            for state in range(self.n_states)
+        ])
+        self.vars = np.maximum(self.vars, self.variance_floor)
+
+        # Start equally likely; initialize transitions with a self-transition bias.
+        self.pi = np.full(self.n_states, 1.0 / self.n_states)
+        self.A = np.full((self.n_states, self.n_states), self.transition_prior)
         np.fill_diagonal(self.A, 1.0)
-        self.A /= self.A.sum(axis=1,keepdims=True)
-        self.history=[]
-        previous=-np.inf
+        self.A /= self.A.sum(axis=1, keepdims=True)
+
+        self.history = []
+        self.converged = False
+        self.stop_reason = "maximum iterations reached"
+        previous_log_likelihood = None
         for _ in range(self.max_iter):
-            gammas=[]; xis=[]; ll_total=0.0
-            for X in sequences:
-                ll,g,xi=self._forward_backward(X); ll_total+=ll; gammas.append(g); xis.append(xi)
-            self.history.append(ll_total)
-            init=np.ones(self.n_states)*self.transition_prior
-            trans=np.ones((self.n_states,self.n_states))*self.transition_prior
-            weights=np.zeros(self.n_states); sums=np.zeros_like(self.means); sums2=np.zeros_like(self.means)
-            for X,g,xi in zip(sequences,gammas,xis):
-                init += g[0]; trans += xi
-                weights += g.sum(axis=0); sums += g.T@X; sums2 += g.T@(X*X)
-            self.pi=init/init.sum(); self.A=trans/trans.sum(axis=1,keepdims=True)
-            self.means=sums/np.maximum(weights[:,None],1e-12)
-            self.vars=np.maximum(sums2/np.maximum(weights[:,None],1e-12)-self.means**2,self.variance_floor)
-            if np.isfinite(previous) and abs(ll_total-previous) <= self.tol*(1+abs(previous)):
-                break
-            previous=ll_total
+            # E step: posterior state occupancy and expected transition counts.
+            gammas, xis = [], []
+            total_log_likelihood = 0.0
+            for sequence in sequences:
+                ll, gamma, xi = self._forward_backward(sequence)
+                total_log_likelihood += ll
+                gammas.append(gamma)
+                xis.append(xi)
+            self.history.append(total_log_likelihood)
+
+            # M step: update pi, A, and diagonal Gaussian emission parameters.
+            initial_counts = np.full(self.n_states, self.transition_prior)
+            transition_counts = np.full(
+                (self.n_states, self.n_states), self.transition_prior
+            )
+            state_weights = np.zeros(self.n_states)
+            weighted_sum = np.zeros_like(self.means)
+            weighted_square_sum = np.zeros_like(self.means)
+            for sequence, gamma, xi in zip(sequences, gammas, xis):
+                initial_counts += gamma[0]
+                transition_counts += xi
+                state_weights += gamma.sum(axis=0)
+                weighted_sum += gamma.T @ sequence
+                weighted_square_sum += gamma.T @ (sequence * sequence)
+
+            self.pi = initial_counts / initial_counts.sum()
+            self.A = transition_counts / transition_counts.sum(axis=1, keepdims=True)
+            self.means = weighted_sum / np.maximum(state_weights[:, None], 1e-12)
+            second_moment = weighted_square_sum / np.maximum(state_weights[:, None], 1e-12)
+            self.vars = np.maximum(second_moment - self.means * self.means, self.variance_floor)
+
+            if previous_log_likelihood is not None:
+                change = abs(total_log_likelihood - previous_log_likelihood)
+                if change <= self.tol * (1 + abs(previous_log_likelihood)):
+                    self.converged = True
+                    self.stop_reason = "relative log-likelihood tolerance reached"
+                    break
+            previous_log_likelihood = total_log_likelihood
+
+        self.iterations = len(self.history)
+        self.final_log_likelihood = float(
+            sum(self._forward_backward(sequence)[0] for sequence in sequences)
+        )
         return self
 
     def viterbi(self, X):
-        le=self._log_emissions(X); la=np.log(self.A); lp=np.log(self.pi)
-        score=np.empty((len(X),self.n_states)); back=np.zeros((len(X),self.n_states),dtype=int)
-        score[0]=lp+le[0]
-        for t in range(1,len(X)):
-            candidates=score[t-1][:,None]+la
-            back[t]=np.argmax(candidates,axis=0)
-            score[t]=le[t]+np.max(candidates,axis=0)
-        path=np.empty(len(X),dtype=int); path[-1]=int(np.argmax(score[-1]))
-        for t in range(len(X)-2,-1,-1): path[t]=back[t+1,path[t+1]]
+        """Return the most likely hidden state path for one observation sequence."""
+        X = np.asarray(X, dtype=float)
+        if X.ndim != 2 or len(X) == 0 or X.shape[1] != self.n_features or not np.all(np.isfinite(X)):
+            raise ValueError("Viterbi input must be a nonempty finite 2D feature sequence")
+        log_emission = self._log_emissions(X)
+        log_transition = np.log(self.A)
+        log_initial = np.log(self.pi)
+        time_steps = len(X)
+        best_score = np.empty((time_steps, self.n_states))
+        backpointer = np.zeros((time_steps, self.n_states), dtype=int)
+        best_score[0] = log_initial + log_emission[0]
+
+        # Dynamic programming finds the best predecessor for each state and time.
+        for t in range(1, time_steps):
+            candidates = best_score[t - 1][:, None] + log_transition
+            backpointer[t] = np.argmax(candidates, axis=0)
+            best_score[t] = log_emission[t] + np.max(candidates, axis=0)
+
+        path = np.empty(time_steps, dtype=int)
+        path[-1] = int(np.argmax(best_score[-1]))
+        for t in range(time_steps - 2, -1, -1):
+            path[t] = backpointer[t + 1, path[t + 1]]
         return path
 
 
@@ -161,6 +281,11 @@ def zscore(train, other):
 def evaluate(records, out_dir):
     train=[r for r in records if r["index"] < TRAIN_MAX_INDEX+1]
     test=[r for r in records if r["index"] >= TRAIN_MAX_INDEX+1]
+    if not train or not test:
+        raise ValueError("The split must contain training and held-out recordings")
+    for activity in ACTIVITIES:
+        if not any(r["activity"] == activity for r in train) or not any(r["activity"] == activity for r in test):
+            raise ValueError(f"Both splits need at least one recording for {activity}")
     Xtrain, Xtest, mean, sd=zscore([r["X"] for r in train],[r["X"] for r in test])
     state_ids={a:i for i,a in enumerate(ACTIVITIES)}
     model=DiagonalGaussianHMM().fit(Xtrain,[state_ids[r["activity"]] for r in train])
@@ -168,22 +293,51 @@ def evaluate(records, out_dir):
     for r,X in zip(test,Xtest):
         pred=model.viterbi(X); truth=state_ids[r["activity"]]
         y_true.extend([truth]*len(pred)); y_pred.extend(pred.tolist())
-        per_record.append({"recording":r["recording"],"activity":r["activity"],"windows":len(pred),"correct":int((pred==truth).sum()),"accuracy":float((pred==truth).mean()),"predicted":pred.tolist()})
-    n=len(ACTIVITIES); cm=np.zeros((n,n),dtype=int)
+        votes=np.bincount(pred, minlength=len(ACTIVITIES))
+        file_prediction=int(np.argmax(votes))
+        per_record.append({"recording":r["recording"],"activity":r["activity"],"windows":len(pred),"correct":int((pred==truth).sum()),"accuracy":float((pred==truth).mean()),"predicted_activity":ACTIVITIES[file_prediction],"recording_correct":int(file_prediction==truth),"predicted":pred.tolist()})
+    n=len(ACTIVITIES); cm=np.zeros((n,n),dtype=int); recording_cm=np.zeros((n,n),dtype=int)
     for t,p in zip(y_true,y_pred): cm[t,p]+=1
-    total=cm.sum(); accuracy=float(np.trace(cm)/total)
+    for row in per_record:
+        recording_cm[state_ids[row["activity"]], state_ids[row["predicted_activity"]]] += 1
+    total=cm.sum(); accuracy=float(np.trace(cm)/total) if total else 0.0
     metrics=[]
+    recording_metrics=[]
+    recording_total=recording_cm.sum()
     for i,a in enumerate(ACTIVITIES):
         tp=cm[i,i]; fn=cm[i,:].sum()-tp; fp=cm[:,i].sum()-tp; tn=total-tp-fn-fp
         metrics.append({"activity":a,"n_test_windows":int(cm[i,:].sum()),"sensitivity":tp/(tp+fn) if tp+fn else 0.,"specificity":tn/(tn+fp) if tn+fp else 0.,"accuracy_ovr":(tp+tn)/total if total else 0.,"precision":tp/(tp+fp) if tp+fp else 0.})
+        rtp=recording_cm[i,i]; rfn=recording_cm[i,:].sum()-rtp; rfp=recording_cm[:,i].sum()-rtp; rtn=recording_total-rtp-rfn-rfp
+        recording_metrics.append({"activity":a,"n_test_recordings":int(recording_cm[i,:].sum()),"sensitivity":rtp/(rtp+rfn) if rtp+rfn else 0.,"specificity":rtn/(rtn+rfp) if rtn+rfp else 0.,"accuracy_ovr":(rtp+rtn)/recording_total if recording_total else 0.,"precision":rtp/(rtp+rfp) if rtp+rfp else 0.})
     out=Path(out_dir); out.mkdir(parents=True,exist_ok=True)
     with (out/"metrics.csv").open('w',newline='') as f:
         w=csv.DictWriter(f,fieldnames=metrics[0].keys()); w.writeheader(); w.writerows(metrics)
     with (out/"confusion_matrix.csv").open('w',newline='') as f:
         w=csv.writer(f); w.writerow(["true\\pred"]+ACTIVITIES)
         for a,row in zip(ACTIVITIES,cm): w.writerow([a]+row.tolist())
+    with (out/"recording_metrics.csv").open('w',newline='') as f:
+        w=csv.DictWriter(f,fieldnames=recording_metrics[0].keys()); w.writeheader(); w.writerows(recording_metrics)
+    with (out/"recording_confusion_matrix.csv").open('w',newline='') as f:
+        w=csv.writer(f); w.writerow(["true/pred"]+ACTIVITIES)
+        for a,row in zip(ACTIVITIES,recording_cm): w.writerow([a]+row.tolist())
+    with (out/"transition_matrix.csv").open('w',newline='') as f:
+        w=csv.writer(f); w.writerow(["state"]+ACTIVITIES)
+        for a,row in zip(ACTIVITIES,model.A): w.writerow([a]+row.tolist())
+    with (out/"initial_probabilities.csv").open('w',newline='') as f:
+        w=csv.writer(f); w.writerow(["activity","probability"])
+        w.writerows(zip(ACTIVITIES,model.pi.tolist()))
+    with (out/"emission_parameters.csv").open('w',newline='') as f:
+        w=csv.writer(f); w.writerow(["activity","feature","mean_z","variance_z"])
+        for state,activity in enumerate(ACTIVITIES):
+            for feature,mean,var in zip(FEATURE_NAMES,model.means[state],model.vars[state]):
+                w.writerow([activity,feature,mean,var])
+    with (out/"training_history.csv").open('w',newline='') as f:
+        w=csv.writer(f); w.writerow(["iteration","log_likelihood"])
+        w.writerows(enumerate(model.history, start=1))
+    (out/"model_summary.json").write_text(json.dumps({"converged":model.converged,"stop_reason":model.stop_reason,"iterations":model.iterations,"tolerance":model.tol,"transition_prior":model.transition_prior,"final_log_likelihood":model.final_log_likelihood,"window_accuracy":accuracy,"recording_accuracy":float(np.trace(recording_cm)/recording_total) if recording_total else 0.0}, indent=2)+"\n")
     with (out/"test_recordings.csv").open('w',newline='') as f:
         w=csv.DictWriter(f,fieldnames=per_record[0].keys()); w.writeheader(); w.writerows(per_record)
+    save_heatmap(out/"recording_confusion_matrix.svg",recording_cm,ACTIVITIES,"Unseen test recordings confusion matrix",ACTIVITIES,integer=True)
     save_heatmap(out/"transition_probabilities.svg",model.A,ACTIVITIES,"HMM transition probabilities",ACTIVITIES)
     sample=next(r for r in records if r["activity"]=="walking")
     raw_t,raw_a=read_sensor(sample["folder"] / "Accelerometer.csv")
@@ -272,9 +426,12 @@ def main(data_root="data", out_dir="results"):
     print("Windows: 2.0 s with 1.0 s hop; splits by recording index (0-39 train, 40-49 unseen test).")
     model,cm,metrics,acc,ntrain,ntest=evaluate(records,out_dir)
     print(f"Train recordings: {ntrain}; unseen test recordings: {ntest}; test windows: {cm.sum()}; accuracy: {acc:.4f}")
-    print("Baum-Welch iterations:",len(model.history),"final training log likelihood:",round(model.history[-1],3))
+    print("Baum-Welch converged:",model.converged,"reason:",model.stop_reason,"iterations:",model.iterations,"final training log likelihood:",round(model.final_log_likelihood,3))
     for row in metrics: print(row)
     print("Confusion matrix (rows=true, columns=predicted):\n",cm)
+    with (Path(out_dir)/"recording_metrics.csv").open(newline="") as f:
+        print("Recording-level metrics:")
+        for row in csv.DictReader(f): print(row)
     print("Wrote results and SVG figures to",out_dir)
 
 if __name__ == "__main__":

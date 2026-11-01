@@ -5,7 +5,7 @@ A small, reproducible HMM project using Sensor Logger accelerometer and gyroscop
 ## Contents
 
 - `data/`: 50 labeled recording folders per activity. Each recording retains its original sensor CSVs and metadata.
-- `src/activity_hmm.py`: timestamp-aware feature extraction, z-score normalization, diagonal Gaussian HMM, Baum–Welch training, Viterbi decoding, metrics, and SVG figures.
+- `src/activity_hmm.py`: timestamp-aware feature extraction, z-score normalization, diagonal Gaussian HMM, Baum–Welch training, Viterbi decoding, window- and recording-level metrics, training convergence history, model parameters, and SVG figures.
 - `notebooks/activity_hmm.ipynb`: walkthrough of data inspection, raw signals, features, model training, test evaluation, and plots.
 - `reports/report.md`: concise report aligned to the formative rubric.
 - `results/`: outputs generated from the current 40/10 recording-level split.
@@ -24,4 +24,4 @@ The analysis uses only `Accelerometer.csv` and `Gyroscope.csv` for model feature
 
 ## Important context
 
-All supplied recordings are from one Android handset and one participant. The holdout evaluates later recordings from that setup; it does not establish cross-person or cross-device generalization. Add links to the four required collection videos in the report before submission. No video files were present in the HMM project folder when this report was prepared.
+All supplied recordings are from one Android handset and one participant. The holdout evaluates later recordings from that setup; it does not establish cross-person or cross-device generalization. The four collection videos are hosted externally and linked in the separately submitted report; video files are not stored in this repository.
