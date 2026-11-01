@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="630" viewBox="0 0 1000 630">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500" y="31" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold">HMM evaluation summary</text>
+<text x="250.0" y="73" text-anchor="middle" font-family="Arial" font-size="17">Transition probabilities</text>
+<text x="125.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">standing</text>
+<text x="187.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">walking</text>
+<text x="249.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">jumping</text>
+<text x="311.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">still</text>
+<text x="85" y="147.0" text-anchor="end" font-family="Arial" font-size="12">standing</text>
+<rect x="94" y="112" width="62" height="62" fill="rgb(88,121,217)" stroke="white"/>
+<text x="125.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0.990</text>
+<rect x="156" y="112" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="187.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="218" y="112" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="249.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="280" y="112" width="62" height="62" fill="rgb(245,248,251)" stroke="white"/>
+<text x="311.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0.010</text>
+<text x="85" y="209.0" text-anchor="end" font-family="Arial" font-size="12">walking</text>
+<rect x="94" y="174" width="62" height="62" fill="rgb(245,248,251)" stroke="white"/>
+<text x="125.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0.008</text>
+<rect x="156" y="174" width="62" height="62" fill="rgb(88,121,217)" stroke="white"/>
+<text x="187.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0.991</text>
+<rect x="218" y="174" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="249.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="280" y="174" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="311.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<text x="85" y="271.0" text-anchor="end" font-family="Arial" font-size="12">jumping</text>
+<rect x="94" y="236" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="125.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="156" y="236" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="187.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0.005</text>
+<rect x="218" y="236" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="249.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0.995</text>
+<rect x="280" y="236" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="311.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<text x="85" y="333.0" text-anchor="end" font-family="Arial" font-size="12">still</text>
+<rect x="94" y="298" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="125.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0.006</text>
+<rect x="156" y="298" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="187.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="218" y="298" width="62" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="249.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0.000</text>
+<rect x="280" y="298" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="311.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0.994</text>
+<text x="750.0" y="73" text-anchor="middle" font-family="Arial" font-size="17">Recording confusion (10 per activity)</text>
+<text x="625.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">standing</text>
+<text x="687.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">walking</text>
+<text x="749.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">jumping</text>
+<text x="811.0" y="103" text-anchor="middle" font-family="Arial" font-size="12">still</text>
+<text x="585" y="147.0" text-anchor="end" font-family="Arial" font-size="12">standing</text>
+<rect x="594" y="112" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="625.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<rect x="656" y="112" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="687.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="718" y="112" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="749.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="780" y="112" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="811.0" y="148.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<text x="585" y="209.0" text-anchor="end" font-family="Arial" font-size="12">walking</text>
+<rect x="594" y="174" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="625.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="656" y="174" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="687.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<rect x="718" y="174" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="749.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="780" y="174" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="811.0" y="210.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<text x="585" y="271.0" text-anchor="end" font-family="Arial" font-size="12">jumping</text>
+<rect x="594" y="236" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="625.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="656" y="236" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="687.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="718" y="236" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="749.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<rect x="780" y="236" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="811.0" y="272.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<text x="585" y="333.0" text-anchor="end" font-family="Arial" font-size="12">still</text>
+<rect x="594" y="298" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="625.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="656" y="298" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="687.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="718" y="298" width="62" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="749.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">0</text>
+<rect x="780" y="298" width="62" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="811.0" y="334.0" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<text x="500" y="375" text-anchor="middle" font-family="Arial" font-size="11">Rows: current/true state; columns: next/predicted state. The test confusion matrix counts recordings.</text>
+<text x="500" y="420" text-anchor="middle" font-family="Arial" font-size="17" font-weight="bold">Viterbi-decoded windows: one held-out recording per activity</text>
+<text x="500" y="440" text-anchor="middle" font-family="Arial" font-size="11">Each block is a 2-second feature window; window starts advance by 1 second.</text>
+<text x="168" y="476" text-anchor="end" font-family="Arial" font-size="12">True: standing</text>
+<rect x="180" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="221.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="267" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="308.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="354" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="395.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="441" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="482.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="528" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="569.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="615" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="656.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<rect x="702" y="458" width="82" height="25" rx="3" fill="#4e79a7"/>
+<text x="743.0" y="475" text-anchor="middle" fill="white" font-family="Arial" font-size="11">standing</text>
+<text x="168" y="514" text-anchor="end" font-family="Arial" font-size="12">True: walking</text>
+<rect x="180" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="221.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="267" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="308.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="354" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="395.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="441" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="482.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="528" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="569.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="615" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="656.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<rect x="702" y="496" width="82" height="25" rx="3" fill="#59a14f"/>
+<text x="743.0" y="513" text-anchor="middle" fill="white" font-family="Arial" font-size="11">walking</text>
+<text x="168" y="552" text-anchor="end" font-family="Arial" font-size="12">True: jumping</text>
+<rect x="180" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="221.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<rect x="267" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="308.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<rect x="354" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="395.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<rect x="441" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="482.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<rect x="528" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="569.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<rect x="615" y="534" width="82" height="25" rx="3" fill="#e15759"/>
+<text x="656.0" y="551" text-anchor="middle" fill="white" font-family="Arial" font-size="11">jumping</text>
+<text x="168" y="590" text-anchor="end" font-family="Arial" font-size="12">True: still</text>
+<rect x="180" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="221.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="267" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="308.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="354" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="395.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="441" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="482.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="528" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="569.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="615" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="656.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+<rect x="702" y="572" width="82" height="25" rx="3" fill="#b07aa1"/>
+<text x="743.0" y="589" text-anchor="middle" fill="white" font-family="Arial" font-size="11">still</text>
+</svg>
