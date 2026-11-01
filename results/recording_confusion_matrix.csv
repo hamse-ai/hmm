@@ -1,0 +1,5 @@
+true/pred,standing,walking,jumping,still
+standing,10,0,0,0
+walking,0,10,0,0
+jumping,0,0,10,0
+still,0,0,0,10

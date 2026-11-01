@@ -1,0 +1,10 @@
+{
+  "converged": true,
+  "stop_reason": "relative log-likelihood tolerance reached",
+  "iterations": 6,
+  "tolerance": 0.0001,
+  "transition_prior": 0.05,
+  "final_log_likelihood": 7090.998990935823,
+  "window_accuracy": 1.0,
+  "recording_accuracy": 1.0
+}

@@ -1,0 +1,5 @@
+activity,n_test_recordings,sensitivity,specificity,accuracy_ovr,precision
+standing,10,1.0,1.0,1.0,1.0
+walking,10,1.0,1.0,1.0,1.0
+jumping,10,1.0,1.0,1.0,1.0
+still,10,1.0,1.0,1.0,1.0
