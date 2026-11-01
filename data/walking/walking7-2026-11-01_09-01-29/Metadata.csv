@@ -1,0 +1,2 @@
+version,device name,recording epoch time,recording time,recording timezone,platform,appVersion,device id,sensors,sampleRateMs,standardisation,platform version
+3,24116RACCG,1793523689091,2026-11-01_09-01-29,Africa/Mogadishu,android,1.68,0376ac6e-6e85-4498-a3eb-bf30e6080690,Accelerometer|Gyroscope|Annotation|TotalAcceleration|GyroscopeUncalibrated|AccelerometerUncalibrated,10|10||10|10|10,false,36
