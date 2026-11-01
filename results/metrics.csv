@@ -1,0 +1,5 @@
+activity,n_test_windows,sensitivity,specificity,accuracy_ovr,precision
+standing,68,1.0,1.0,1.0,1.0
+walking,69,1.0,1.0,1.0,1.0
+jumping,61,1.0,1.0,1.0,1.0
+still,69,1.0,1.0,1.0,1.0

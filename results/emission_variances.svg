@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="418">
+<rect width="100%" height="100%" fill="white"/>
+<text x="460.0" y="35" text-anchor="middle" font-family="Arial" font-size="22">Learned diagonal emission variances</text>
+<text x="256.42857142857144" y="80" text-anchor="middle" font-family="Arial" font-size="12">acc_mag_mean</text>
+<text x="349.28571428571433" y="80" text-anchor="middle" font-family="Arial" font-size="12">acc_mag_std</text>
+<text x="442.14285714285717" y="80" text-anchor="middle" font-family="Arial" font-size="12">acc_sma</text>
+<text x="535.0" y="80" text-anchor="middle" font-family="Arial" font-size="12">gyro_mag_rms</text>
+<text x="627.8571428571429" y="80" text-anchor="middle" font-family="Arial" font-size="12">gyro_mag_std</text>
+<text x="720.7142857142858" y="80" text-anchor="middle" font-family="Arial" font-size="12">acc_dominant_hz</text>
+<text x="813.5714285714286" y="80" text-anchor="middle" font-family="Arial" font-size="12">acc_spectral_energy</text>
+<text x="198" y="125.0" text-anchor="end" font-family="Arial" font-size="13">standing</text>
+<rect x="210.0" y="90" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="256.42857142857144" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="302.8571428571429" y="90" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="349.28571428571433" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="395.7142857142857" y="90" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="442.14285714285717" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="488.57142857142856" y="90" width="92.85714285714286" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="535.0" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="581.4285714285714" y="90" width="92.85714285714286" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="627.8571428571429" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="674.2857142857143" y="90" width="92.85714285714286" height="62" fill="rgb(140,163,228)" stroke="white"/>
+<text x="720.7142857142858" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">1.07</text>
+<rect x="767.1428571428571" y="90" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="813.5714285714286" y="126.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<text x="198" y="187.0" text-anchor="end" font-family="Arial" font-size="13">walking</text>
+<rect x="210.0" y="152" width="92.85714285714286" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="256.42857142857144" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="302.8571428571429" y="152" width="92.85714285714286" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="349.28571428571433" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="395.7142857142857" y="152" width="92.85714285714286" height="62" fill="rgb(246,249,251)" stroke="white"/>
+<text x="442.14285714285717" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="488.57142857142856" y="152" width="92.85714285714286" height="62" fill="rgb(245,248,251)" stroke="white"/>
+<text x="535.0" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.02</text>
+<rect x="581.4285714285714" y="152" width="92.85714285714286" height="62" fill="rgb(244,247,251)" stroke="white"/>
+<text x="627.8571428571429" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.03</text>
+<rect x="674.2857142857143" y="152" width="92.85714285714286" height="62" fill="rgb(233,239,249)" stroke="white"/>
+<text x="720.7142857142858" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.13</text>
+<rect x="767.1428571428571" y="152" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="813.5714285714286" y="188.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<text x="198" y="249.0" text-anchor="end" font-family="Arial" font-size="13">jumping</text>
+<rect x="210.0" y="214" width="92.85714285714286" height="62" fill="rgb(216,225,245)" stroke="white"/>
+<text x="256.42857142857144" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.30</text>
+<rect x="302.8571428571429" y="214" width="92.85714285714286" height="62" fill="rgb(201,213,242)" stroke="white"/>
+<text x="349.28571428571433" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.46</text>
+<rect x="395.7142857142857" y="214" width="92.85714285714286" height="62" fill="rgb(213,223,244)" stroke="white"/>
+<text x="442.14285714285717" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.33</text>
+<rect x="488.57142857142856" y="214" width="92.85714285714286" height="62" fill="rgb(227,234,247)" stroke="white"/>
+<text x="535.0" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.20</text>
+<rect x="581.4285714285714" y="214" width="92.85714285714286" height="62" fill="rgb(222,230,246)" stroke="white"/>
+<text x="627.8571428571429" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.24</text>
+<rect x="674.2857142857143" y="214" width="92.85714285714286" height="62" fill="rgb(224,232,247)" stroke="white"/>
+<text x="720.7142857142858" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">0.22</text>
+<rect x="767.1428571428571" y="214" width="92.85714285714286" height="62" fill="rgb(87,120,217)" stroke="white"/>
+<text x="813.5714285714286" y="250.0" text-anchor="middle" font-family="Arial" font-size="13">1.61</text>
+<text x="198" y="311.0" text-anchor="end" font-family="Arial" font-size="13">still</text>
+<rect x="210.0" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="256.42857142857144" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="302.8571428571429" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="349.28571428571433" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="395.7142857142857" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="442.14285714285717" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="488.57142857142856" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="535.0" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="581.4285714285714" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="627.8571428571429" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+<rect x="674.2857142857143" y="276" width="92.85714285714286" height="62" fill="rgb(105,134,221)" stroke="white"/>
+<text x="720.7142857142858" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">1.43</text>
+<rect x="767.1428571428571" y="276" width="92.85714285714286" height="62" fill="rgb(247,250,252)" stroke="white"/>
+<text x="813.5714285714286" y="312.0" text-anchor="middle" font-family="Arial" font-size="13">0.00</text>
+</svg>
